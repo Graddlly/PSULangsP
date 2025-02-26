@@ -10,9 +10,11 @@ let rec readInt() =
         readInt()
 
 let numberToDigitList (num: int) =
-    num.ToString().ToCharArray()
-    |> Array.map (fun c -> int c - int '0')// ASCII '1' - '0' = 1 (код 49 - 48 = 1)
-    |> Array.toList
+    num
+    |> abs
+    |> string
+    |> Seq.map (fun c -> int c - int '0') // ASCII '1' - '0' = 1 (код 49 - 48 = 1)
+    |> Seq.toList
 
 [<EntryPoint>]
 let main _ =
