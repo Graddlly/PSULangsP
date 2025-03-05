@@ -1,8 +1,10 @@
 ﻿open System
 
 // Функция для подсчёта количества строк заданной длины
-let countStringsOfLength length strings =
-    strings |> List.fold (fun acc str -> if String.length str = length then acc + 1 else acc) 0
+let rec countStringsOfLength length strings acc =
+    match strings with
+    | [] -> acc
+    | head :: tail -> countStringsOfLength length tail (if String.length head = length then acc + 1 else acc)
 
 // Функция для запроса целочисленного ввода у пользователя
 let rec getIntInput prompt =
@@ -14,22 +16,20 @@ let rec getIntInput prompt =
         getIntInput prompt
 
 // Функция для ввода списка строк
-let rec getStringList () =
-    printfn "Введите строки по одной. Для завершения ввода оставьте строку пустой и нажмите Enter."
-    let rec loop acc =
-        let input = Console.ReadLine()
-        match input with
-        | "" -> List.rev acc
-        | _ -> loop (input :: acc)
-    loop []
+let rec getStringList acc =
+    printf "Введите строку (или пустую строку для завершения): "
+    let input = Console.ReadLine()
+    match input with
+    | "" -> List.rev acc
+    | _ -> getStringList (input :: acc)
 
 [<EntryPoint>]
 let main _ =
-    printfn "Программа для подсчёта строк заданной длины."
+    printfn "Программа для подсчёта строк заданной длины.\n"
     
-    let strings = getStringList()
-    let length = getIntInput "Введите длину строк для подсчёта: "
-    let count = countStringsOfLength length strings
+    let strings = getStringList []
+    let length = getIntInput "\nВведите длину строк для подсчёта: "
+    let count = countStringsOfLength length strings 0
     
     printfn "Количество строк длины %d: %d" length count
     0
