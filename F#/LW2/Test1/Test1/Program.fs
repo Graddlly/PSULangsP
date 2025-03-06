@@ -7,7 +7,7 @@ let rec getCharInput () =
     | null | "" ->
         printfn "Ошибка: нужно ввести хотя-бы один символ. Попробуйте снова."
         getCharInput()
-    | input when input.Length = 1 -> input.[0]
+    | input when input.Length = 1 -> input.Chars(0)
     | _ ->
         printfn "Ошибка: нужно ввести ровно один символ. Попробуйте снова."
         getCharInput()
