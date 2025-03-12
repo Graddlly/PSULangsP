@@ -26,7 +26,7 @@ let getFilesStartingWith directory startChar =
         let files = seq {
             for filePath in Directory.EnumerateFiles(directory) do
                 let fileName = Path.GetFileName(filePath)
-                if fileName.Length > 0 && fileName.[0] = startChar then
+                if fileName.Length > 0 && fileName.Chars(0) = startChar then
                     yield fileName
         }
         Ok files
