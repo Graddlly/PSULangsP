@@ -1,4 +1,4 @@
-﻿open System
+open System
 
 // Функция для запроса ввода строки с проверкой на пустоту
 let rec readNonEmptyString prompt =
@@ -12,7 +12,7 @@ let rec readNonEmptyString prompt =
 // Функция для запроса ввода одиночного символа
 let rec readChar prompt =
     match readNonEmptyString prompt with
-    | input when input.Length = 1 -> input.[0]
+    | input when input.Length = 1 -> input.Chars(0)
     | _ ->
         printfn "Ошибка: нужно ввести ровно один символ. Попробуйте снова."
         readChar prompt
