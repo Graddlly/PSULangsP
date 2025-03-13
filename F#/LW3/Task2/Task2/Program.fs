@@ -1,4 +1,4 @@
-open System
+﻿open System
 
 // Функция для запроса целого числа у пользователя
 let rec readInt prompt =
@@ -28,9 +28,8 @@ let main _ =
     printf "\n"
     
     let count =
-        lines
-        |> Seq.map (fun s -> if String.length s = targetLength then 1 else 0)
-        |> Seq.sum
+        lines.Value
+        |> Seq.fold (fun acc s -> acc + if String.length s = targetLength then 1 else 0) 0
     
     printfn $"\nКоличество строк длиной %d{targetLength}: %d{count}"
     0
