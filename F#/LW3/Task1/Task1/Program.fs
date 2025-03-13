@@ -1,8 +1,8 @@
-open System
+﻿open System
 
 // Функция для запроса ввода строки с проверкой на пустоту
 let rec readNonEmptyString prompt =
-    printf "%s" prompt
+    printf $"%s{prompt}"
     match Console.ReadLine() with
     | null | "" ->
         printfn "Ошибка: ввод не должен быть пустым. Попробуйте снова."
@@ -19,18 +19,18 @@ let rec readChar prompt =
 
 // Функция для запроса количества строк
 let rec readInt prompt =
-    printf "%s" prompt
+    printf $"%s{prompt}"
     match Int32.TryParse(Console.ReadLine()) with
     | (true, value) when value > 0 -> value
     | _ ->
         printfn "Ошибка: введите положительное число. Попробуйте снова."
         readInt prompt
 
-// Функция для получения строк с использованием отложенных вычислений
+// Функция для получения строк
 let readAllLines count =
     seq {
         for i in 1 .. count do
-            yield readNonEmptyString (sprintf "Введите строку #%d: " i)
+            yield readNonEmptyString $"Введите строку #%d{i}: "
     }
 
 [<EntryPoint>]
