@@ -1,12 +1,4 @@
-﻿open System
-
-// Функция для запроса списка строк у пользователя
-let readLines count =
-    seq {
-        for i in 1 .. count do
-            printf $"Введите строку %d{i}: "
-            yield Console.ReadLine()
-    }
+open System
 
 // Функция для запроса целого числа у пользователя
 let rec readInt prompt =
@@ -16,12 +8,22 @@ let rec readInt prompt =
     | _ ->
         printfn "Ошибка ввода! Введите положительное целое число."
         readInt prompt
+        
+// Функция для ленивого чтения строк
+let readLinesLazy (count: int) =
+    lazy (
+        seq {
+            for i in 1 .. count do
+                printf "Введите строку %d: " i
+                yield Console.ReadLine()
+        }
+    )
 
 [<EntryPoint>]
 let main _ =
     printfn "Программа для подсчета строк заданной длины.\n"
     let countLines = readInt "Введите количество строк: "
-    let lines = readLines countLines
+    let lines = readLinesLazy countLines
     let targetLength = readInt "Введите желаемую длину строки: "
     printf "\n"
     

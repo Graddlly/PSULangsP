@@ -17,13 +17,14 @@ let directoryExists dir = Directory.Exists dir
 
 // Функция для получения файлов, начинающихся с заданного символа
 let getFilesStartingWith dir prefix =
-    seq {
-        for filePath in Directory.EnumerateFiles(dir) do
-            let fileName = Path.GetFileName(filePath)
-            if fileName.StartsWith(prefix.ToString(), StringComparison.OrdinalIgnoreCase) then
-                yield fileName
-    }
-    |> Seq.map id
+    lazy (
+        seq {
+            for filePath in Directory.EnumerateFiles(dir) do
+                let fileName = Path.GetFileName(filePath)
+                if fileName.StartsWith(prefix.ToString(), StringComparison.OrdinalIgnoreCase) then
+                    yield fileName
+        }
+    )
 
 [<EntryPoint>]
 let main _ =
@@ -48,7 +49,8 @@ let main _ =
     let files = getFilesStartingWith directory prefix
 
     // Подсчет количества файлов
-    let total = Seq.length files
+    let totalLazy = lazy (Seq.length files.Value)
+    let total = totalLazy.Force()
     printfn $"Найдено %d{total} файлов, начинающихся с '%c{prefix}'."
 
     // Если файлов нет, программа завершает работу
@@ -61,12 +63,16 @@ let main _ =
                      (fun s -> s.ToLower() = "да" || s.ToLower() = "нет")
                      "Ошибка: Введите 'да' или 'нет'."
 
-        // Вывод списка файлов
-        if showFiles.ToLower() = "да" then
+        // Ленивый вывод списка файлов
+        let printFilesLazy = lazy (
             printfn "\nСписок найденных файлов:"
-            files
+            files.Value
             |> Seq.mapi (fun i -> sprintf "%d. %s" (i + 1))
             |> Seq.iter (printfn "%s")
+        )
+
+        // Если пользователь хочет увидеть файлы, вызываем `printFilesLazy`
+        if showFiles.ToLower() = "да" then printFilesLazy.Force()
         else printfn "Завершение программы."
 
     0
