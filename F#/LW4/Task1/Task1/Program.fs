@@ -4,135 +4,188 @@ type Tree =
     | Leaf
     | Node of float * Tree * Tree
 
-// Создание дарева
+// Вставка значения в дерево
+let rec insertValue value tree =
+    match tree with
+    | Leaf -> Node(value, Leaf, Leaf)
+    | Node(nodeValue, left, right) ->
+        if value <= nodeValue then Node(nodeValue, insertValue value left, right)
+        else Node(nodeValue, left, insertValue value right)
+
+// Создание дерева из списка значений
+let createTreeFromList values = List.fold (fun tree value -> insertValue value tree) Leaf values
+
+// Ввод корректного целого числа
+let rec readValidInt prompt =
+    printf $"%s{prompt}"
+    let success, value = Int32.TryParse(Console.ReadLine())
+    if success && value > 0 then value
+    else
+        printfn "Ошибка ввода! Пожалуйста, введите корректное положительное целое число."
+        readValidInt prompt
+
+// Ввод корректного вещественного числа
+let rec readValidFloat prompt =
+    printf $"%s{prompt}"
+    let success, value = Double.TryParse(Console.ReadLine())
+    if success then value
+    else
+        printfn "Ошибка ввода! Пожалуйста, введите корректное вещественное число."
+        readValidFloat prompt
+
+// Ввод списка вещественных чисел с клавиатуры
+let inputValuesList count =
+    printfn $"Введите %d{count} вещественных чисел:"
+    [ for i in 1..count -> readValidFloat $"Число %d{i}: " ]
+
+// Создание дерева
 let rec createTree depth =
     printf "Ввести значение узла? (д/н): "
     let response = Console.ReadLine().ToLower()
     
     if response = "д" || response = "да" then
-        printf "Введите вещественное число: "
-        let valueStr = Console.ReadLine()
-        let success, value = Double.TryParse(valueStr)
+        let value = readValidFloat "Введите вещественное число: "
         
-        let rec finalValue =
-            if success then value
-            else
-                printfn "Ошибка ввода! Используется значение 0.0"
-                0.0
-            
         printfn $"Заполнение левого поддерева (глубина %d{depth + 1})"
         let left = createTree (depth + 1)
         
         printfn $"Заполнение правого поддерева (глубина %d{depth + 1})"
         let right = createTree (depth + 1)
         
-        Node(finalValue, left, right)
-    elif response = "н" || response = "нет" then Leaf
-    else
-        printf "Введено неправильное значение. Введите правильно и повторите попытку!"
-        createTree depth
+        Node(value, left, right)
+    else Leaf
 
-// Функция преобразования дерева (округление значений)
+// Округление значений
 let rec mapTree mapper tree =
     match tree with
     | Leaf -> Leaf
-    | Node(value, left, right) ->
-        Node(mapper value, mapTree mapper left, mapTree mapper right)
+    | Node(value, left, right) -> Node(mapper value, mapTree mapper left, mapTree mapper right)
 
-// Получение высоты дерева
-let rec getHeight tree =
-    match tree with
-    | Leaf -> 0
-    | Node(_, left, right) ->
-        1 + max (getHeight left) (getHeight right)
-
-// Создание строкового представления значения
+// Строковое представление значения
 let formatValue value isOriginal =
     if isOriginal then $"%.6g{value}"
     else $"%.0f{value}"
 
-// Функция вывода дерева
-let printTreeVisual tree isOriginal =
-    let rec buildTreeDisplay tree =
-        match tree with
-        | Leaf -> ([], 0, 0)  // (строки, высота, средняя позиция корня)
-        | Node(value, Leaf, Leaf) ->
-            let valueStr = "  " + formatValue value isOriginal
-            ([valueStr], 1, valueStr.Length / 2)  // Листовой узел
-        | Node(value, left, right) ->
-            // Рекурсивно строим левое и правое поддеревья
-            let (lStrings, lHeight, lPos) = buildTreeDisplay left
-            let (rStrings, rHeight, rPos) = buildTreeDisplay right
-            
-            let valueStr = "  " + formatValue value isOriginal
-            let rootPos = valueStr.Length / 2
-            
-            // Минимальное расстояние между поддеревьями
-            let minSeparation = 3
-            
-            // Вычисляем позиции левого и правого поддеревьев
-            let lShift = 0
-            let combinedPos = max (lPos + lShift + minSeparation) (rootPos)
-            let rShift = combinedPos - rPos
-            
-            // Первая строка - значение корня
-            let firstLine = String.replicate (combinedPos - rootPos) " " + valueStr
-            
-            // Вторая строка - соединительные линии
-            let secondLine = 
-                if left = Leaf && right = Leaf then []
-                else
-                    let leftConnector = 
-                        if left = Leaf then "" 
-                        else String.replicate (combinedPos - 1) " " + "/"
-                    let rightConnector = 
-                        if right = Leaf then "" 
-                        else String.replicate (rShift - 1) " " + "\\"
-                    [leftConnector + rightConnector]
-            
-            // Смещаем строки левого и правого поддеревьев
-            let leftLines = 
-                if left = Leaf then [] 
-                else List.map (fun s -> String.replicate lShift " " + s) lStrings
-            let rightLines = 
-                if right = Leaf then [] 
-                else List.map (fun s -> String.replicate rShift " " + s) rStrings
-            
-            // Соединяем все строки
-            let leftPadded = leftLines @ List.replicate (max 0 (rHeight - lHeight)) ""
-            let rightPadded = rightLines @ List.replicate (max 0 (lHeight - rHeight)) ""
-            
-            let combinedLines = 
-                List.map2 
-                    (fun l r -> 
-                        l + String.replicate (max 0 (rShift - l.Length)) " " + r) 
-                    leftPadded 
-                    rightPadded
-            
-            let allLines = [firstLine] @ secondLine @ combinedLines
-            (allLines, 1 + max lHeight rHeight + (if secondLine.IsEmpty then 0 else 1), combinedPos)
-    
+// Определение высоты дерева
+let rec getTreeHeight tree =
     match tree with
-    | Leaf -> printfn "Пустое дерево"
-    | _ ->
-        let (lines, _, _) = buildTreeDisplay tree
-        List.iter (printfn "%s") lines
+    | Leaf -> 0
+    | Node(_, left, right) -> 1 + max (getTreeHeight left) (getTreeHeight right)
+
+// Вывод дерева
+let printTreeVisual tree isOriginal =
+    // Ширина значения узла
+    let getValueWidth value = (formatValue value isOriginal).Length
+    
+    // Максимальная ширины узла в дереве
+    let rec getMaxNodeWidth tree =
+        match tree with
+        | Leaf -> 0
+        | Node(value, left, right) ->
+            max (getValueWidth value) (max (getMaxNodeWidth left) (getMaxNodeWidth right))
+    
+    // Высота и максимальная ширина узла
+    let height = getTreeHeight tree
+    let maxNodeWidth = max 4 (getMaxNodeWidth tree)
+    
+    // Двумерный массив для представления дерева
+    let width = int (Math.Pow(2.0, float height)) * maxNodeWidth
+    let lines = Array.init (height * 2) (fun _ -> Array.create width ' ')
+    
+    // Заполнение массива значениями и соединительными линиями
+    let rec fillArray tree level leftBound rightBound =
+        match tree with
+        | Leaf -> ()
+        | Node(value, left, right) ->
+            let mid = (leftBound + rightBound) / 2
+            let valueStr = formatValue value isOriginal
+            let strLen = valueStr.Length
+            let startPos = mid - strLen / 2
+            
+            // Значение узла
+            for i = 0 to strLen - 1 do
+                if startPos + i < width then
+                    lines.[level * 2].[startPos + i] <- valueStr.[i]
+            
+            // Если есть потомки, добавление соединительных линий
+            if left <> Leaf || right <> Leaf then
+                lines.[level * 2 + 1].[mid] <- '|'
+                
+                let leftMid = (leftBound + mid) / 2
+                let rightMid = (mid + rightBound) / 2
+                
+                if left <> Leaf then
+                    // Горизонтальная линия влево
+                    for i = leftMid + 1 to mid - 1 do
+                        lines.[level * 2 + 2].[i] <- '_'
+                    lines.[level * 2 + 2].[leftMid] <- '/'
+                
+                if right <> Leaf then
+                    // Горизонтальная линия вправо
+                    for i = mid + 1 to rightMid - 1 do
+                        lines.[level * 2 + 2].[i] <- '_'
+                    lines.[level * 2 + 2].[rightMid] <- '\\'
+                
+                // Рекурсивное заполнение для потомков
+                fillArray left (level + 1) leftBound mid
+                fillArray right (level + 1) mid rightBound
+    
+    // Заполнение массива
+    if tree <> Leaf then
+        fillArray tree 0 0 width
+        
+        // Вывод результата
+        for line in lines do
+            let trimmedLine = String(line).TrimEnd()
+            if trimmedLine.Length > 0 then printfn $"%s{trimmedLine}"
+    else printfn "Пустое дерево"
+
+// Функция для выбора способа создания дерева
+let rec chooseTreeCreationMethod() =
+    printfn "Выберите способ создания дерева:"
+    printfn "1 - Ручной ввод элементов"
+    printfn "2 - Автоматическое создание и распределение элементов"
+    printf "Ваш выбор (1/2): "
+    
+    let choice = Console.ReadLine()
+    match choice with
+    | "1" | "2" -> choice
+    | _ -> 
+        printfn "Неверный выбор. Пожалуйста, выберите 1 или 2."
+        chooseTreeCreationMethod()
 
 [<EntryPoint>]
 let runMain _ =
-    printfn "=== Программа для работы с бинарным деревом ==="
-    printfn "Сейчас вы будете вводить дерево вещественных чисел."
-    printfn "Для каждого узла вам нужно указать, хотите ли вы добавить значение,"
-    printfn "и если да - ввести вещественное число."
+    printfn "=== Программа для работы с деревом вещественных чисел ==="
     
-    printfn "\nНачало создания дерева:"
-    let originalTree = createTree 0
+    let choice = chooseTreeCreationMethod()
+    let originalTree =
+        match choice with
+        | "1" ->
+            printfn "\nСейчас вы будете вводить дерево вещественных чисел."
+            printfn "Для каждого узла вам нужно указать, хотите ли вы добавить значение,"
+            printfn "и если да - ввести вещественное число."
+            printfn "\nНачало создания дерева:"
+            createTree 0
+        | "2" ->
+            printfn "\nАвтоматическое создание бинарного дерева поиска."
+            let elementCount = readValidInt "Введите количество элементов: "
+            
+            let values = inputValuesList elementCount
+            printfn "\nВведенные значения:"
+            values |> List.map string |> String.concat ", " |> printfn "%s"
+            
+            createTreeFromList values
+        | _ ->
+            printfn "Ошибка выбора. Завершение программы."
+            Leaf
     
     printfn "\nИсходное дерево:"
     printTreeVisual originalTree true
     
     // Создание нового дерева с округленными значениями
     let roundedTree = mapTree Math.Round originalTree
+    
     printfn "\nДерево с округленными значениями:"
     printTreeVisual roundedTree false
     0
