@@ -2,7 +2,7 @@
 
 type Tree =
     | Leaf
-    | Node of int * Tree * Tree
+    | Node of float * Tree * Tree
 
 // Вставка значения в дерево
 let rec insertValue value tree =
@@ -15,19 +15,19 @@ let rec insertValue value tree =
 // Создание дерева из списка значений
 let createTreeFromList values = List.fold (fun tree value -> insertValue value tree) Leaf values
 
-// Ввод корректного целого числа
-let rec readValidInt prompt =
+// Ввод корректного вещественного числа
+let rec readValidFloat prompt =
     printf $"%s{prompt}"
-    let success, value = Int32.TryParse(Console.ReadLine())
+    let success, value = Double.TryParse(Console.ReadLine())
     if success then value
     else
-        printfn "Ошибка ввода! Пожалуйста, введите корректное целое число."
-        readValidInt prompt
+        printfn "Ошибка ввода! Пожалуйста, введите корректное вещественное число."
+        readValidFloat prompt
 
-// Ввод списка целых чисел с клавиатуры
+// Ввод списка вещественных чисел с клавиатуры
 let inputValuesList count =
-    printfn $"Введите %d{count} целых чисел:"
-    [ for i in 1..count -> readValidInt $"Число %d{i}: " ]
+    printfn $"Введите %d{count} вещественных чисел:"
+    [ for i in 1..count -> readValidFloat $"Число %d{i}: " ]
 
 // Создание дерева
 let rec createTree depth =
@@ -36,7 +36,7 @@ let rec createTree depth =
 
     match response with
     | "д" | "да" ->
-        let value = readValidInt "Введите целое число: "
+        let value = readValidFloat "Введите вещественное число: "
 
         printfn $"Заполнение левого поддерева (глубина {depth + 1})"
         let left = createTree (depth + 1)
@@ -138,8 +138,8 @@ let rec chooseTreeCreationMethod() =
         printfn "Неверный выбор. Пожалуйста, выберите 1 или 2."
         chooseTreeCreationMethod()
 
-// Fold
-let rec foldTree (folder: int -> int -> int -> int) (initial: int) (tree: Tree) =
+// Fold - acc (value -> leftRes -> rightRes -> newAcc)
+let rec foldTree (folder: float -> float -> float -> float) (initial: float) (tree: Tree) =
     match tree with
     | Leaf -> initial
     | Node (value, left, right) ->
@@ -148,38 +148,38 @@ let rec foldTree (folder: int -> int -> int -> int) (initial: int) (tree: Tree) 
         folder value leftResult rightResult
 
 // Подсчет количества вхождений элемента
-let countOccurrences (target: int) tree =
+let countOccurrences (target: float) tree =
     let folder value leftCount rightCount =
-        let currentCount = if value = target then 1 else 0
+        let currentCount = if value = target then 1.0 else 0.0
         currentCount + leftCount + rightCount
-    foldTree folder 0 tree
+    foldTree folder 0.0 tree
 
-// Безопасный ввод целого числа
-let rec getIntInput prompt =
-    printfn "%s" prompt
+// Безопасный ввод вещественного числа
+let rec getFloatInput prompt =
+    printfn $"%s{prompt}"
     let input = Console.ReadLine()
-    match Int32.TryParse(input) with
+    match Double.TryParse(input) with
     | (true, value) -> value
     | (false, _) ->
-        printfn "Ошибка: Введено не целое число. Попробуйте снова."
-        getIntInput prompt
+        printfn "Ошибка: Введено не вещественное число. Попробуйте снова."
+        getFloatInput prompt
 
 [<EntryPoint>]
 let runMain _ =
-    printfn "=== Программа для работы с деревом целых чисел ==="
+    printfn "=== Программа для работы с деревом вещественных чисел ==="
 
     let choice = chooseTreeCreationMethod()
     let originalTree =
         match choice with
         | "1" ->
-            printfn "\nСейчас вы будете вводить дерево целых чисел."
+            printfn "\nСейчас вы будете вводить дерево вещественных чисел."
             printfn "Для каждого узла вам нужно указать, хотите ли вы добавить значение,"
-            printfn "и если да - ввести целое число."
+            printfn "и если да - ввести вещественное число."
             printfn "\nНачало создания дерева:"
             createTree 0
         | "2" ->
             printfn "\nАвтоматическое создание бинарного дерева поиска."
-            let elementCount = readValidInt "Введите количество элементов: "
+            let elementCount = int (readValidFloat "Введите количество элементов: ")
 
             let values = inputValuesList elementCount
             printfn "\nВведенные значения:"
@@ -193,8 +193,8 @@ let runMain _ =
     printfn "\nИсходное дерево:"
     printTreeVisual originalTree
 
-    let targetElement = readValidInt "\nВведите целое число, количество вхождений которого нужно посчитать: "
+    let targetElement = readValidFloat "\nВведите вещественное число, количество вхождений которого нужно посчитать: "
     let occurrences = countOccurrences targetElement originalTree
 
-    printfn $"Элемент %d{targetElement} встречается в дереве %d{occurrences} раз(а)."
+    printfn $"Элемент %f{targetElement} встречается в дереве %d{int occurrences} раз(а)."
     0
