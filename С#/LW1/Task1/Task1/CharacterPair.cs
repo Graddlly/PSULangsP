@@ -39,18 +39,30 @@ public class CharacterPair
     /// Первый символ
     /// </summary>
     public char FirstChar 
-    { 
-        get { return _firstChar; } 
-        set { _firstChar = value; } 
+    {
+        get
+        {
+            return _firstChar;
+        }
+        set
+        {
+            _firstChar = value;
+        } 
     }
 
     /// <summary>
     /// Второй символ
     /// </summary>
     public char SecondChar 
-    { 
-        get { return _secondChar; } 
-        set { _secondChar = value; } 
+    {
+        get
+        {
+            return _secondChar;
+        }
+        set
+        {
+            _secondChar = value;
+        } 
     }
     
     /// <summary>

@@ -16,7 +16,8 @@ public partial class Money
             result._kopeks = 0;
             result._rubles++;
         }
-        else result._kopeks++;
+        else 
+            result._kopeks++;
         
         return result;
     }
@@ -39,7 +40,8 @@ public partial class Money
             result._kopeks = 99;
             result._rubles--;
         }
-        else result._kopeks--;
+        else 
+            result._kopeks--;
         
         return result;
     }

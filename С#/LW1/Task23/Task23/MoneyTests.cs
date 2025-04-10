@@ -278,7 +278,8 @@ public static class MoneyTests
                             Console.WriteLine($"Ошибка: {ex.Message}");
                         }
                     }
-                    else Console.WriteLine("Неверное значение для рублей.");
+                    else 
+                        Console.WriteLine("Неверное значение для рублей.");
                     break;
                 case "5":
                     Console.Write("Введите количество рублей, из которых нужно вычесть: ");
@@ -294,7 +295,8 @@ public static class MoneyTests
                             Console.WriteLine($"Ошибка: {ex.Message}");
                         }
                     }
-                    else Console.WriteLine("Неверное значение для рублей.");
+                    else 
+                        Console.WriteLine("Неверное значение для рублей.");
                     break;
                 case "6":
                     uint rubles = money;

@@ -30,7 +30,8 @@ public partial class Money
             _rubles = rubles;
             _kopeks = kopeks;
         }
-        else throw new ArgumentException("Копейки должны быть в диапазоне от 0 до 99.");
+        else 
+            throw new ArgumentException("Копейки должны быть в диапазоне от 0 до 99.");
     }
     
     /// <summary>
@@ -38,8 +39,14 @@ public partial class Money
     /// </summary>
     public uint Rubles
     {
-        get { return _rubles; }
-        set { _rubles = value; }
+        get
+        {
+            return _rubles;
+        }
+        set
+        {
+            _rubles = value;
+        }
     }
 
     /// <summary>
@@ -47,11 +54,16 @@ public partial class Money
     /// </summary>
     public byte Kopeks
     {
-        get { return _kopeks; }
+        get
+        {
+            return _kopeks;
+        }
         set
         {
-            if (value < 100) _kopeks = value;
-            else throw new ArgumentException("Копейки должны быть в диапазоне от 0 до 99.");
+            if (value < 100) 
+                _kopeks = value;
+            else 
+                throw new ArgumentException("Копейки должны быть в диапазоне от 0 до 99.");
         }
     }
     
