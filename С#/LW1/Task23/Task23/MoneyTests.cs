@@ -332,8 +332,10 @@ public static class MoneyTests
             Console.Write("Введите рубли (целое неотрицательное число): ");
             var input = Console.ReadLine();
                 
-            if (uint.TryParse(input, out rubles)) isValid = true;
-            else Console.WriteLine("Ошибка: Введите корректное неотрицательное целое число для рублей.");
+            if (uint.TryParse(input, out rubles)) 
+                isValid = true;
+            else 
+                Console.WriteLine("Ошибка: Введите корректное неотрицательное целое число для рублей.");
         }
             
         // Сбрасываем флаг для ввода копеек
@@ -344,8 +346,10 @@ public static class MoneyTests
             Console.Write("Введите копейки (целое число от 0 до 99): ");
             var input = Console.ReadLine();
                 
-            if (byte.TryParse(input, out kopeks) && kopeks < 100) isValid = true;
-            else Console.WriteLine("Ошибка: Введите корректное число для копеек (от 0 до 99).");
+            if (byte.TryParse(input, out kopeks) && kopeks < 100) 
+                isValid = true;
+            else 
+                Console.WriteLine("Ошибка: Введите корректное число для копеек (от 0 до 99).");
         }
             
         return new Money(rubles, kopeks);

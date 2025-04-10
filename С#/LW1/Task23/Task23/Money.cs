@@ -39,14 +39,8 @@ public partial class Money
     /// </summary>
     public uint Rubles
     {
-        get
-        {
-            return _rubles;
-        }
-        set
-        {
-            _rubles = value;
-        }
+        get { return _rubles; }
+        set { _rubles = value; }
     }
 
     /// <summary>
@@ -54,11 +48,8 @@ public partial class Money
     /// </summary>
     public byte Kopeks
     {
-        get
-        {
-            return _kopeks;
-        }
-        set
+        get { return _kopeks; }
+        set 
         {
             if (value < 100) 
                 _kopeks = value;
