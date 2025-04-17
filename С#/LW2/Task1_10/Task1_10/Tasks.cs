@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Task1_10;
 
 using static Methods;
@@ -31,6 +33,7 @@ public class Tasks
         }
         
         var product = (long)min * max;
+        Console.WriteLine($"Файл с исходными значениями: {FILE_NAME}");
         Console.WriteLine($"Минимум: {min}; Максимум: {max}; Произведение: {product}");
     }
     
@@ -55,6 +58,7 @@ public class Tasks
             }
         }
         
+        Console.WriteLine($"Файл с исходными значениями: {FILE_NAME}");
         Console.WriteLine($"Количество нечётных элементов: {oddCount}");
     }
     
@@ -265,11 +269,19 @@ public class Tasks
     public static void Task10()
     {
         const string FILE_NAME = "task10.txt";
-        
+    
         if (!File.Exists(FILE_NAME))
             GenerateOlympiadResults(FILE_NAME);
         
-        var participants = new List<Participant>();
+        var gradeData = new Dictionary<int, List<int>>
+        {
+            { 7, [] },
+            { 8, [] },
+            { 9, [] },
+            { 10, [] },
+            { 11, [] }
+        };
+        
         using (var reader = new StreamReader(FILE_NAME))
         {
             var line = reader.ReadLine();
@@ -282,56 +294,54 @@ public class Tasks
                         var parts = line.Split(' ');
                         if (parts.Length >= 4)
                         {
-                            var lastName = parts[0];
-                            var firstName = parts[1];
                             var grade = int.Parse(parts[2]);
                             var score = int.Parse(parts[3]);
                             
-                            participants.Add(new Participant(lastName, firstName, grade, score));
+                            gradeData[grade].Add(score);
                         }
                     }
                 }
         }
         
-        participants.Sort(CompareByScoreDescending);
+        var allScores = new List<int>();
+        foreach (var scores in gradeData.Values)
+            allScores.AddRange(scores);
         
-        var thresholdIndex = (int)Math.Ceiling(participants.Count * 0.25) - 1;
+        allScores.Sort();
+        allScores.Reverse();
+        
+        var thresholdIndex = (int)Math.Ceiling(allScores.Count * 0.25) - 1;
         if (thresholdIndex < 0)
             thresholdIndex = 0;
         
-        var thresholdScore = participants[thresholdIndex].Score;
-        var lastIndex = thresholdIndex;
-        while (lastIndex + 1 < participants.Count && participants[lastIndex + 1].Score == thresholdScore)
-            lastIndex++;
+        var thresholdScore = allScores[thresholdIndex];
         
-        int minWinnerScore;
-        if (lastIndex > thresholdIndex)
-        {
-            if (thresholdScore > 70 / 2)
-                minWinnerScore = thresholdScore;
-            else
-            {
-                var nextHigherScore = -1;
-                for (var i = thresholdIndex - 1; i >= 0; i--)
+        if (thresholdScore < 70 / 2)
+            for (var i = thresholdIndex - 1; i >= 0; i--)
+                if (allScores[i] > thresholdScore)
                 {
-                    if (participants[i].Score > thresholdScore)
-                    {
-                        nextHigherScore = participants[i].Score;
-                        break;
-                    }
+                    thresholdScore = allScores[i];
+                    break;
                 }
-                minWinnerScore = nextHigherScore;
-            }
+        
+        Console.WriteLine(thresholdScore);
+        
+        var winnersOutput = new StringBuilder();
+        var grades = new int[] { 7, 8, 9, 10, 11 };
+        for (var i = 0; i < grades.Length; i++)
+        {
+            var grade = grades[i];
+            var winnerCount = 0;
+        
+            for (var j = 0; j < gradeData[grade].Count; j++)
+                if (gradeData[grade][j] >= thresholdScore)
+                    winnerCount++;
+        
+            winnersOutput.Append(winnerCount);
+            if (i < grades.Length - 1)
+                winnersOutput.Append(" ");
         }
-        else
-            minWinnerScore = thresholdScore;
-        
-        var winnersByGrade = new int[5];
-        foreach (var p in participants)
-            if (p.Score >= minWinnerScore)
-                winnersByGrade[p.Grade - 7]++;
-        
-        Console.WriteLine(minWinnerScore);
-        Console.WriteLine($"{winnersByGrade[0]} {winnersByGrade[1]} {winnersByGrade[2]} {winnersByGrade[3]} {winnersByGrade[4]}");
+    
+        Console.WriteLine(winnersOutput.ToString());
     }
 }

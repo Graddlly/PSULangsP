@@ -228,19 +228,4 @@ public class Methods
             }
         }
     }
-    
-    /// <summary>
-    /// Сравнивает двух участников по их количеству баллов в порядке убывания.
-    /// </summary>
-    /// <param name="p1">Первый участник для сравнения.</param>
-    /// <param name="p2">Второй участник для сравнения.</param>
-    /// <returns>
-    /// Отрицательное число, если p1 имеет больше баллов, чем p2; 
-    /// положительное число, если p2 имеет больше баллов, чем p1; 
-    /// 0, если баллы равны.
-    /// </returns>
-    public static int CompareByScoreDescending(Participant p1, Participant p2)
-    {
-        return p2.Score.CompareTo(p1.Score);
-    }
 }
