@@ -22,7 +22,7 @@ public class ProductCatalog
     {
         try
         {
-            BinarySerializer.SerializeToFile(Products, FilePath);
+            BinarySerializer.Serialize(Products, FilePath);
             Console.WriteLine("База данных успешно сохранена в файл.");
         }
         catch (Exception ex)
@@ -42,7 +42,7 @@ public class ProductCatalog
         {
             if (File.Exists(FilePath))
             {
-                Products = BinarySerializer.DeserializeFromFile(FilePath);
+                Products = BinarySerializer.Deserialize<List<Product>>(FilePath);
                 Console.WriteLine("База данных успешно загружена из файла.");
             }
             else

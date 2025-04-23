@@ -1,68 +1,84 @@
 namespace TaskProductCatalog;
 
+using System.IO.Compression;
+using System.Text;
+using System.Xml.Serialization;
+
 /// <summary>
 /// Класс для сериализации/десериализации списка продуктов в бинарный файл
 /// </summary>
 public class BinarySerializer
 {
     /// <summary>
-    /// Сериализует список продуктов в бинарный файл
+    /// Сериализует объект в XML и сохраняет в бинарный файл
     /// </summary>
-    /// <param name="products">Список продуктов</param>
+    /// <param name="obj">Сериализуемый объект</param>
     /// <param name="filePath">Путь к файлу</param>
-    public static void SerializeToFile(List<Product> products, string filePath)
+    public static void Serialize<T>(T obj, string filePath)
     {
-        using (var fs = new FileStream(filePath, FileMode.Create))
+        try
         {
-            using (var writer = new BinaryWriter(fs))
+            var serializer = new XmlSerializer(typeof(T));
+            string xmlData;
+            
+            using (var stringWriter = new StringWriter())
             {
-                writer.Write(products.Count);
-                
-                foreach (var product in products)
-                {
-                    writer.Write(product.Id);
-                    writer.Write(product.Name);
-                    writer.Write(product.Price);
-                    writer.Write(product.Quantity);
-                    writer.Write(product.ManufacturingDate.ToBinary());
-                    writer.Write(product.IsAvailable);
-                }
+                serializer.Serialize(stringWriter, obj);
+                xmlData = stringWriter.ToString();
             }
+            
+            var xmlBytes = Encoding.UTF8.GetBytes(xmlData);
+            
+            byte[] compressedBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress))
+                    gzipStream.Write(xmlBytes, 0, xmlBytes.Length);
+                compressedBytes = memoryStream.ToArray();
+            }
+            
+            File.WriteAllBytes(filePath, compressedBytes);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при сериализации: {ex.Message}");
+            throw;
         }
     }
-
+    
     /// <summary>
-    /// Десериализует список продуктов из бинарного файла
+    /// Десериализует объект из бинарного файла с XML-данными
     /// </summary>
     /// <param name="filePath">Путь к файлу</param>
-    /// <returns>Список продуктов</returns>
-    public static List<Product> DeserializeFromFile(string filePath)
+    /// <returns>Десериализованный объект</returns>
+    public static T Deserialize<T>(string filePath)
     {
-        var products = new List<Product>();
-        
         if (!File.Exists(filePath))
-            return products;
+            return default(T)!;
             
-        using (var fs = new FileStream(filePath, FileMode.Open))
+        try
         {
-            using (var reader = new BinaryReader(fs))
-            {
-                var count = reader.ReadInt32();
-                
-                for (var i = 0; i < count; i++)
+            var compressedBytes = File.ReadAllBytes(filePath);
+            
+            string xmlData;
+            using (var memoryStream = new MemoryStream(compressedBytes))
+                using (var decompressedStream = new MemoryStream())
                 {
-                    var id = reader.ReadInt32();
-                    var name = reader.ReadString();
-                    var price = reader.ReadDecimal();
-                    var quantity = reader.ReadInt32();
-                    var manufacturingDate = DateTime.FromBinary(reader.ReadInt64());
-                    var isAvailable = reader.ReadBoolean();
-                    
-                    products.Add(new Product(id, name, price, quantity, manufacturingDate, isAvailable));
+                    using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
+                        gzipStream.CopyTo(decompressedStream);
+                    xmlData = Encoding.UTF8.GetString(decompressedStream.ToArray());
                 }
+            
+            var serializer = new XmlSerializer(typeof(T));
+            using (var stringReader = new StringReader(xmlData))
+            {
+                return (T)serializer.Deserialize(stringReader)!;
             }
         }
-        
-        return products;
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при десериализации: {ex.Message}");
+            return default(T)!;
+        }
     }
 }
