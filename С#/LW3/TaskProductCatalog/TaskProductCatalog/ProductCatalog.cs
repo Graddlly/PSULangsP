@@ -1,7 +1,5 @@
 namespace TaskProductCatalog;
 
-using System.Text.Json;
-
 public class ProductCatalog
 {
     private List<Product> _products;
@@ -68,14 +66,14 @@ public class ProductCatalog
     {
         try
         {
-            if (_products.Count == 0)
+            if (Products.Count == 0)
             {
                 Console.WriteLine("База данных пуста.");
                 return;
             }
 
             Console.WriteLine("Список товаров:");
-            foreach (var product in _products)
+            foreach (var product in Products)
             {
                 Console.WriteLine(product);
             }
@@ -98,8 +96,8 @@ public class ProductCatalog
             Console.WriteLine("Добавление нового товара");
             
             int id;
-            if (_products.Count > 0)
-                id = _products.Max(p => p.Id) + 1;
+            if (Products.Count > 0)
+                id = Products.Max(p => p.Id) + 1;
             else
                 id = 1;
                 
@@ -119,7 +117,7 @@ public class ProductCatalog
             var isAvailable = Console.ReadLine()?.ToLower() == "да";
             
             var newProduct = new Product(id, name, price, quantity, manufacturingDate, isAvailable);
-            _products.Add(newProduct);
+            Products.Add(newProduct);
             
             Console.WriteLine("Товар успешно добавлен.");
         }
@@ -138,7 +136,7 @@ public class ProductCatalog
     {
         try
         {
-            if (_products.Count == 0)
+            if (Products.Count == 0)
             {
                 Console.WriteLine("База данных пуста.");
                 return;
@@ -147,11 +145,11 @@ public class ProductCatalog
             Console.Write("Введите ID товара для удаления: ");
             var id = int.Parse(Console.ReadLine()!);
             
-            var productToRemove = _products.FirstOrDefault(p => p.Id == id);
+            var productToRemove = Products.FirstOrDefault(p => p.Id == id);
             
             if (productToRemove != null)
             {
-                _products.Remove(productToRemove);
+                Products.Remove(productToRemove);
                 Console.WriteLine("Товар успешно удален.");
             }
             else
@@ -177,7 +175,7 @@ public class ProductCatalog
             Console.Write("Введите минимальную цену: ");
             var minPrice = decimal.Parse(Console.ReadLine()!);
             
-            var result = _products.Where(p => p.Price > minPrice).ToList();
+            var result = Products.Where(p => p.Price > minPrice).ToList();
             
             if (result.Count > 0)
             {
@@ -207,7 +205,7 @@ public class ProductCatalog
     {
         try
         {
-            var result = _products.Where(p => p.IsAvailable)
+            var result = Products.Where(p => p.IsAvailable)
                                   .OrderBy(p => p.Price)
                                   .ToList();
             
@@ -239,7 +237,7 @@ public class ProductCatalog
     {
         try
         {
-            var totalValue = _products.Sum(p => p.Price * p.Quantity);
+            var totalValue = Products.Sum(p => p.Price * p.Quantity);
             Console.WriteLine($"Общая стоимость всех товаров: {totalValue:C}");
         }
         catch (Exception ex)
@@ -260,7 +258,7 @@ public class ProductCatalog
             Console.Write("Введите дату (дд.мм.гггг): ");
             var date = DateTime.Parse(Console.ReadLine()!);
             
-            var count = _products.Count(p => p.ManufacturingDate > date);
+            var count = Products.Count(p => p.ManufacturingDate > date);
             
             Console.WriteLine($"Количество товаров, произведенных после {date.ToShortDateString()}: {count}");
         }
