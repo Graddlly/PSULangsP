@@ -6,7 +6,7 @@ class Program
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         
-        const string FILE_PATH = "products.json";
+        const string FILE_PATH = "products.bin";
         var catalog = new ProductCatalog(FILE_PATH);
         catalog.LoadFromFile();
         

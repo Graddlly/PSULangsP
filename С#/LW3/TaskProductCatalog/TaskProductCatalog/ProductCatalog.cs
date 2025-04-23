@@ -13,20 +13,18 @@ public class ProductCatalog
     /// <param name="filePath">Путь к файлу для хранения данных</param>
     public ProductCatalog(string filePath)
     {
-        _filePath = filePath;
-        _products = [];
+        FilePath = filePath;
+        Products = [];
     }
 
     /// <summary>
-    /// Сохраняет базу данных в JSON файл
+    /// Сохраняет базу данных в бинарный файл
     /// </summary>
     public void SaveToFile()
     {
         try
         {
-            var jsonString = JsonSerializer.Serialize(_products, 
-                new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(_filePath, jsonString);
+            BinarySerializer.SerializeToFile(Products, FilePath);
             Console.WriteLine("База данных успешно сохранена в файл.");
         }
         catch (Exception ex)
@@ -38,29 +36,28 @@ public class ProductCatalog
     }
 
     /// <summary>
-    /// Загружает базу данных из JSON файла
+    /// Загружает базу данных из бинарного файла
     /// </summary>
     public void LoadFromFile()
     {
         try
         {
-            if (File.Exists(_filePath))
+            if (File.Exists(FilePath))
             {
-                var jsonString = File.ReadAllText(_filePath);
-                _products = JsonSerializer.Deserialize<List<Product>>(jsonString) ?? [];
+                Products = BinarySerializer.DeserializeFromFile(FilePath);
                 Console.WriteLine("База данных успешно загружена из файла.");
             }
             else
             {
                 Console.WriteLine("Файл базы данных не найден. Создана новая база данных.");
-                _products = [];
+                Products = [];
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Ошибка при загрузке файла: {ex.Message}");
             Console.WriteLine("Создана новая база данных.");
-            _products = [];
+            Products = [];
         }
     }
 
@@ -272,6 +269,30 @@ public class ProductCatalog
             Console.WriteLine($"Ошибка при выполнении запроса: {ex.Message}");
             Console.WriteLine("Повторите запрос.");
             QueryProductsCountAfterDate();
+        }
+    }
+
+    public List<Product> Products
+    {
+        get
+        {
+            return _products;
+        }
+        set
+        {
+            _products = value;
+        }
+    }
+
+    public string FilePath
+    {
+        get
+        {
+            return _filePath;
+        }
+        set
+        {
+            _filePath = value;
         }
     }
 }
