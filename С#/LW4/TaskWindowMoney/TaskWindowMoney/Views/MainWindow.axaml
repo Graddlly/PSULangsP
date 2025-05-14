@@ -1,0 +1,214 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TaskWindowMoney.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="using:TaskWindowMoney.Converters"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+        x:Class="TaskWindowMoney.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/money.ico"
+        Title="Money Management Application"
+        Background="#2D2D30"
+        FontFamily="Segoe UI, Arial, Sans-Serif">
+
+    <Window.Styles>
+        <Style Selector="Border">
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="BoxShadow" Value="0 2 4 0 #50000000"/>
+            <Setter Property="BorderBrush" Value="#4A4A4A"/>
+        </Style>
+        
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+        </Style>
+        
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#005FB8"/>
+        </Style>
+        
+        <Style Selector="Button:pressed">
+            <Setter Property="Background" Value="#004C96"/>
+        </Style>
+        
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="#4F4F4F"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="BorderBrush" Value="#6A6A6A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        
+        <Style Selector="Button.secondary:pointerover">
+            <Setter Property="Background" Value="#5A5A5A"/>
+        </Style>
+        
+        <Style Selector="NumericUpDown">
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="Background" Value="#313133"/>
+            <Setter Property="BorderBrush" Value="#555558"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="MinWidth" Value="100"/>
+        </Style>
+        
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+        
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        
+        <Style Selector="ListBoxItem:pointerover">
+            <Setter Property="Background" Value="#4A4A4A"/>
+        </Style>
+        
+        <Style Selector="ListBoxItem:selected">
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Window.Styles>
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{Binding ErrorMessage}" 
+                   Foreground="#D83B01" FontWeight="Medium" Margin="0,0,0,8" 
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"/>
+
+        <Border Grid.Row="1" BorderThickness="1" Background="#3C3C3C" Margin="0,0,0,12">
+            <Grid Margin="12,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Первая денежная сумма" Classes="title"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Рубли:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <NumericUpDown Grid.Column="1" Value="{Binding FirstRubles}" Minimum="0" Maximum="4294967295"/>
+                    <TextBlock Grid.Column="2" Text="Копейки:" VerticalAlignment="Center" Margin="16,0,8,0"/>
+                    <NumericUpDown Grid.Column="3" Value="{Binding FirstKopeks}" Minimum="0" Maximum="99"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" BorderThickness="1" Background="#3C3C3C" Margin="0,0,0,12">
+            <Grid Margin="12,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Вторая денежная сумма" Classes="title"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Рубли:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <NumericUpDown Grid.Column="1" Value="{Binding SecondRubles}" Minimum="0" Maximum="4294967295"/>
+                    <TextBlock Grid.Column="2" Text="Копейки:" VerticalAlignment="Center" Margin="16,0,8,0"/>
+                    <NumericUpDown Grid.Column="3" Value="{Binding SecondKopeks}" Minimum="0" Maximum="99"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" BorderThickness="1" Background="#3C3C3C" Margin="0,0,0,12">
+            <Grid Margin="12,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Операции" Classes="title"/>
+                <WrapPanel Grid.Row="1" Margin="0">
+                    <Button Content="Вычесть вторую из первой" Command="{Binding SubtractCommand}" Margin="0,0,8,8"/>
+                    <Button Content="Увеличить на 1 коп." Command="{Binding IncrementCommand}" Margin="0,0,8,8"/>
+                    <Button Content="Уменьшить на 1 коп." Command="{Binding DecrementCommand}" Margin="0,0,8,8"/>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="4" BorderThickness="1" Background="#3C3C3C" Margin="0,0,0,12">
+            <Grid Margin="12,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Преобразования первой суммы" Classes="title"/>
+                
+                <Grid Grid.Row="1" Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>    
+                        <ColumnDefinition Width="Auto"/> 
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                        <Button Content="Показать рубли" Command="{Binding ToUintCommand}" Margin="0,0,8,0"/>
+                        <Button Content="Показать копейки" Command="{Binding ToDoubleCommand}"/> 
+                    </StackPanel>
+                    
+                    <Button Grid.Column="1" Classes="secondary" Content="Очистить результаты" Command="{Binding ClearResultsCommand}"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="5" BorderThickness="1" Background="#3C3C3C" Margin="0">
+            <Grid Margin="12,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Результаты" Classes="title"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding ResultHistory}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+    </Grid>
+    
+</Window>
