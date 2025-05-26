@@ -8,8 +8,9 @@ public class InputOutput
     
     private static string _line = "";
     private static byte _lastInLine;
-    private static TextPosition _positionNow = new(1, 0);
+    private static TextPosition _positionNow;
     private static List<Err> _err = [];
+    private static List<Err> _currentErr = [];
     private static StreamReader? File { get; set; }
     private static uint _errCount;
     private static bool _isInitialized;
@@ -98,11 +99,16 @@ public class InputOutput
         if (_positionNow.charNumber == _lastInLine)
         {
             ListThisLine();
-            if (_err.Count > 0)
+            /*if (_err.Count > 0)
             {
                 ListErrors();
                 _err.Clear();
-            }
+            }*/ // TODO: Раскоментировать для написания всего списка и закоментировать ниже
+            
+            _currentErr = _err.FindAll(e => e.errorPosition.lineNumber == _positionNow.lineNumber);
+            
+            if (_currentErr.Count > 0)
+                ListErrors();
             
             ReadNextLine();
             if (!_endOfFile)
@@ -163,7 +169,7 @@ public class InputOutput
 
     private static void ListErrors()
     {
-        var pos = 6 - $"{_positionNow.lineNumber} ".Length;
+        /*var pos = 6 - $"{_positionNow.lineNumber} ".Length;
         foreach (var item in _err)
         {
             ++_errCount;
@@ -176,6 +182,14 @@ public class InputOutput
             
             s += $"^ Ошибка: Код №{item.errorCode}: {errorDescription}";
             Console.WriteLine(s);
+        }*/ // TODO: Раскоментировать для написания всего списка и закоментировать ниже
+        foreach (var item in _currentErr)
+        {
+            ++_errCount;
+            var spaces = new string(' ', item.errorPosition.charNumber);
+            var message = ErrorTable.GetValueOrDefault(item.errorCode, "Неизвестная ошибка");
+
+            Console.WriteLine($"{spaces}^ **{_errCount:00}**: ошибка {item.errorCode} - {message}");
         }
     }
 
