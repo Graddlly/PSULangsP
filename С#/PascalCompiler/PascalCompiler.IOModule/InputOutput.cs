@@ -103,7 +103,7 @@ public class InputOutput
             {
                 ListErrors();
                 _err.Clear();
-            }*/ // TODO: Раскоментировать для написания всего списка и закоментировать ниже
+            }*/
             
             _currentErr = _err.FindAll(e => e.errorPosition.lineNumber == _positionNow.lineNumber);
             
@@ -169,20 +169,6 @@ public class InputOutput
 
     private static void ListErrors()
     {
-        /*var pos = 6 - $"{_positionNow.lineNumber} ".Length;
-        foreach (var item in _err)
-        {
-            ++_errCount;
-            var s = "**";
-            if (_errCount < 10) s += "0";
-            s += $"{_errCount}**";
-            while (s.Length - 1 < pos + item.errorPosition.charNumber) s += " ";
-            
-            var errorDescription = ErrorTable.GetValueOrDefault(item.errorCode, "Неизвестная ошибка");
-            
-            s += $"^ Ошибка: Код №{item.errorCode}: {errorDescription}";
-            Console.WriteLine(s);
-        }*/ // TODO: Раскоментировать для написания всего списка и закоментировать ниже
         foreach (var item in _currentErr)
         {
             ++_errCount;
