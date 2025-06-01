@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PascalCompiler.IOModule", "PascalCompiler.IOModule\PascalCompiler.IOModule.csproj", "{9F71463B-2B22-4232-AB0B-49B0FA735C1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PascalCompiler.LexicalAnalyzer", "PascalCompiler.LexicalAnalyzer\PascalCompiler.LexicalAnalyzer.csproj", "{B4E3FCD8-111F-4549-94B0-CDEA9CF6E527}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{9F71463B-2B22-4232-AB0B-49B0FA735C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F71463B-2B22-4232-AB0B-49B0FA735C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F71463B-2B22-4232-AB0B-49B0FA735C1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4E3FCD8-111F-4549-94B0-CDEA9CF6E527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E3FCD8-111F-4549-94B0-CDEA9CF6E527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E3FCD8-111F-4549-94B0-CDEA9CF6E527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E3FCD8-111F-4549-94B0-CDEA9CF6E527}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
