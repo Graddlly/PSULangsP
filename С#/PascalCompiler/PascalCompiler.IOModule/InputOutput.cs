@@ -18,7 +18,7 @@ public class InputOutput
     private static readonly Dictionary<byte, string> ErrorTable = new()
     {
         { 1, "Неожиданный символ" },
-        { 2, "Ожидается точка с запятой" },
+        { 2, "Ожидается точка с запятой (или точка в конце программы)" },
         { 3, "Ожидается идентификатор" },
         { 4, "Ожидается знак равенства" },
         { 5, "Недопустимый символ в числе" },
@@ -28,13 +28,15 @@ public class InputOutput
         { 9, "Ожидается закрывающая скобка" },
         { 10, "Ожидается ключевое слово BEGIN" },
         { 11, "Ожидается ключевое слово END" },
-        { 12, "Неожиданный конец файла" },
+        { 12, "Неожиданный конец файла (незакрытый комментарий)" },
         { 13, "Недопустимый тип данных" },
         { 14, "Повторное объявление идентификатора" },
-        { 15, "Необъявленный идентификатор" }
+        { 15, "Необъявленный идентификатор" },
+        { 203, "Константа превышает предел" }
     };
     
     public static char Ch { get; private set; } = '\0';
+    public static TextPosition PositionNow { get; }
 
     /// <summary>
     /// Инициализация модуля ввода-вывода
@@ -54,11 +56,12 @@ public class InputOutput
             _endOfFile = false;
             _isInitialized = true;
 
-            Console.WriteLine("=== ИСХОДНЫЙ КОД ===");
+            // TODO: Раскомментировать, если нужен вывод исходного кода
+            /*Console.WriteLine("=== ИСХОДНЫЙ КОД ===");
             
             var allText = File.ReadToEnd();
             Console.WriteLine(allText);
-            Console.WriteLine("=== КОНЕЦ ИСХОДНОГО КОДА ===\n");
+            Console.WriteLine("=== КОНЕЦ ИСХОДНОГО КОДА ===\n");*/
             
             File.Close();
             File = new StreamReader(fileName);
@@ -99,11 +102,6 @@ public class InputOutput
         if (_positionNow.charNumber == _lastInLine)
         {
             ListThisLine();
-            /*if (_err.Count > 0)
-            {
-                ListErrors();
-                _err.Clear();
-            }*/
             
             _currentErr = _err.FindAll(e => e.errorPosition.lineNumber == _positionNow.lineNumber);
             
@@ -159,6 +157,7 @@ public class InputOutput
 
     private static void End()
     {
+        Console.WriteLine();
         Console.WriteLine($"\nКомпиляция завершена: ошибок — {_errCount}!");
         if (File != null)
         {
@@ -172,10 +171,11 @@ public class InputOutput
         foreach (var item in _currentErr)
         {
             ++_errCount;
-            var spaces = new string(' ', item.errorPosition.charNumber);
+            var lineNumberSpaces = new string(' ', 4);
+            var errorPositionSpaces = new string(' ', item.errorPosition.charNumber);
             var message = ErrorTable.GetValueOrDefault(item.errorCode, "Неизвестная ошибка");
 
-            Console.WriteLine($"{spaces}^ **{_errCount:00}**: ошибка {item.errorCode} - {message}");
+            Console.WriteLine($"{lineNumberSpaces}{errorPositionSpaces}^ **{_errCount:00}**: ошибка {item.errorCode} - {message}");
         }
     }
 
@@ -190,7 +190,10 @@ public class InputOutput
         {
             var e = new Err(position, errorCode);
             _err.Add(e);
+            
+#if DEBUG
             Console.WriteLine($"[DEBUG] Добавлена ошибка {errorCode} в позицию {position} - всего ошибок: {_err.Count}");
+#endif
         }
     }
 
