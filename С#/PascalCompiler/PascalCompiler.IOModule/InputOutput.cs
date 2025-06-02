@@ -55,13 +55,6 @@ public class InputOutput
             _errCount = 0;
             _endOfFile = false;
             _isInitialized = true;
-
-            // TODO: Раскомментировать, если нужен вывод исходного кода
-            /*Console.WriteLine("=== ИСХОДНЫЙ КОД ===");
-            
-            var allText = File.ReadToEnd();
-            Console.WriteLine(allText);
-            Console.WriteLine("=== КОНЕЦ ИСХОДНОГО КОДА ===\n");*/
             
             File.Close();
             File = new StreamReader(fileName);
@@ -101,7 +94,9 @@ public class InputOutput
 
         if (_positionNow.charNumber == _lastInLine)
         {
+#if DEBUG
             ListThisLine();
+#endif
             
             _currentErr = _err.FindAll(e => e.errorPosition.lineNumber == _positionNow.lineNumber);
             
@@ -157,13 +152,17 @@ public class InputOutput
 
     private static void End()
     {
-        Console.WriteLine();
-        Console.WriteLine($"\nКомпиляция завершена: ошибок — {_errCount}!");
         if (File != null)
         {
             File.Close();
             File = null;
         }
+    }
+
+    public static void PrintFinalSummary()
+    {
+        Console.WriteLine();
+        Console.WriteLine($"\nКомпиляция завершена: ошибок — {_errCount}!");
     }
 
     private static void ListErrors()

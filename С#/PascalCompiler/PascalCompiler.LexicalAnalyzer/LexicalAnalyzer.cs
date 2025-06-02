@@ -504,6 +504,79 @@ public class LexicalAnalyzer
         InputOutput.Error(ERR_UNCLOSED_COMMENT);
         Symbol = 0;
     }
+    
+    /// <summary>
+    /// Получение значения токена для отображения
+    /// </summary>
+    /// <param name="lexer">Лексический анализатор</param>
+    /// <param name="symbolCode">Код символа</param>
+    /// <returns>Строковое представление значения</returns>
+    private string GetTokenValueInt()
+    {
+        return Symbol switch
+        {
+            ident => AddrName,
+            intc => NmbInt.ToString(),
+            floatc => NmbFloat.ToString(),
+            charc => $"'{OneSymbol}'",
+            _ => "" 
+        };
+    }
+    
+    public List<byte> AnalyzeProgram(TokenAnalyzer tokenAnalyzer, out int processedTokenCount)
+    {
+        var symbolCodesList = new List<byte>();
+        processedTokenCount = 0;
+        var programBlockDepth = 0;
+        var foundProgramEndKeyword = false; 
+
+        byte currentSymbolCode;
+        do
+        {
+            currentSymbolCode = NextSym(); 
+
+            if (currentSymbolCode != 0) 
+            {
+                processedTokenCount++;
+                symbolCodesList.Add(currentSymbolCode);
+
+                var tokenValue = GetTokenValueInt();
+                tokenAnalyzer.AddToken(currentSymbolCode, tokenValue, this.Token); // MODIFIED: Use this.Token
+
+                if (currentSymbolCode == beginsy)
+                {
+                    programBlockDepth++;
+                }
+                else if (currentSymbolCode == endsy)
+                {
+                    programBlockDepth--;
+                    if (programBlockDepth == 0) 
+                    {
+                        foundProgramEndKeyword = true;
+                    }
+                }
+                else if (foundProgramEndKeyword) 
+                {
+                    if (currentSymbolCode == point)
+                    {
+                        foundProgramEndKeyword = false; 
+                    }
+                    else
+                    {
+                        InputOutput.Error(2, Token); 
+                        foundProgramEndKeyword = false; 
+                    }
+                }
+            }
+        } while (currentSymbolCode != 0 && !InputOutput.IsEndOfFile()); 
+
+        if (foundProgramEndKeyword) 
+        {
+            InputOutput.Error(2, Token); 
+        }
+        
+        return symbolCodesList;
+    }
 
     /// <summary>
     /// Вывод таблицы соответствий символов и кодов

@@ -24,60 +24,32 @@ public class Program
         lexer.PrintSymbolTable();
 
         Console.WriteLine("=== РЕЗУЛЬТАТ ЛЕКСИЧЕСКОГО АНАЛИЗА ===");
-        Console.WriteLine("Коды символов:");
+        var symbolCodes = lexer.AnalyzeProgram(tokenAnalyzer, out var totalTokens);
         
-        byte symbolCode;
-        var tokenCount = 0;
-        
-        do
+        Console.WriteLine("\nКоды символов:");
+        for (var i = 0; i < symbolCodes.Count; i++)
         {
-            symbolCode = lexer.NextSym();
-            if (symbolCode != 0)
+            Console.Write($"{symbolCodes[i]} ");
+            if ((i + 1) % 20 == 0)
             {
-                tokenCount++;
-                Console.Write($"{symbolCode} ");
-                
-                var tokenValue = GetTokenValue(lexer, symbolCode);
-                tokenAnalyzer.AddToken(symbolCode, tokenValue, lexer.Token);
-
-                if (tokenCount % 20 == 0)
-                    Console.WriteLine();
+                Console.WriteLine();
             }
-        } while (symbolCode != 0 && !InputOutput.IsEndOfFile());
+        }
+        Console.WriteLine();
 
-        Console.WriteLine($"\n\nВсего обработано токенов: {tokenCount}");
+        Console.WriteLine($"\n\nВсего обработано токенов: {totalTokens}");
         
 #if DEBUG
         tokenAnalyzer.PrintDetailedAnalysis();
 #endif
         
+        InputOutput.PrintFinalSummary();
         Console.WriteLine("=== КОНЕЦ АНАЛИЗА ===");
         
         if (File.Exists(fileName))
         {
             File.Delete(fileName);
         }
-        
-        Console.WriteLine("\nНажмите любую клавишу для выхода...");
-        Console.ReadKey();
-    }
-
-    /// <summary>
-    /// Получение значения токена для отображения
-    /// </summary>
-    /// <param name="lexer">Лексический анализатор</param>
-    /// <param name="symbolCode">Код символа</param>
-    /// <returns>Строковое представление значения</returns>
-    private static string GetTokenValue(LexicalAnalyzer lexer, byte symbolCode)
-    {
-        return symbolCode switch
-        {
-            LexicalAnalyzer.ident => lexer.AddrName,
-            LexicalAnalyzer.intc => lexer.NmbInt.ToString(),
-            LexicalAnalyzer.floatc => lexer.NmbFloat.ToString(),
-            LexicalAnalyzer.charc => $"'{lexer.OneSymbol}'",
-            _ => ""
-        };
     }
 
     /// <summary>
@@ -134,8 +106,6 @@ case x of
 end;
 
 @ # $ % ~ ` |   { Недопустимые символы }
-
-writeln('Result: ', z);
 end.";
 
         File.WriteAllText(fileName, testProgram);
