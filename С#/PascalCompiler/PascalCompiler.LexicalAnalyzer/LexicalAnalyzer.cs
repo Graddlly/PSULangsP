@@ -523,6 +523,12 @@ public class LexicalAnalyzer
         };
     }
     
+    /// <summary>
+    /// Основной анализ
+    /// </summary>
+    /// <param name="tokenAnalyzer">Главный tokenAnalyzer</param>
+    /// <param name="processedTokenCount">Кол-во проанализированных токенов</param>
+    /// <returns></returns>
     public List<byte> AnalyzeProgram(TokenAnalyzer tokenAnalyzer, out int processedTokenCount)
     {
         var symbolCodesList = new List<byte>();
@@ -541,7 +547,7 @@ public class LexicalAnalyzer
                 symbolCodesList.Add(currentSymbolCode);
 
                 var tokenValue = GetTokenValueInt();
-                tokenAnalyzer.AddToken(currentSymbolCode, tokenValue, this.Token); // MODIFIED: Use this.Token
+                tokenAnalyzer.AddToken(currentSymbolCode, tokenValue, Token);
 
                 if (currentSymbolCode == beginsy)
                 {
