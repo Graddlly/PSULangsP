@@ -549,28 +549,39 @@ public class LexicalAnalyzer
                 var tokenValue = GetTokenValueInt();
                 tokenAnalyzer.AddToken(currentSymbolCode, tokenValue, Token);
 
-                if (currentSymbolCode == beginsy)
+                switch (currentSymbolCode)
                 {
-                    programBlockDepth++;
-                }
-                else if (currentSymbolCode == endsy)
-                {
-                    programBlockDepth--;
-                    if (programBlockDepth == 0) 
+                    case beginsy:
+                        programBlockDepth++;
+                        break;
+                    
+                    case endsy:
                     {
-                        foundProgramEndKeyword = true;
+                        programBlockDepth--;
+                        if (programBlockDepth == 0) 
+                        {
+                            foundProgramEndKeyword = true;
+                        }
+
+                        break;
                     }
-                }
-                else if (foundProgramEndKeyword) 
-                {
-                    if (currentSymbolCode == point)
+                    
+                    default:
                     {
-                        foundProgramEndKeyword = false; 
-                    }
-                    else
-                    {
-                        InputOutput.Error(2, Token); 
-                        foundProgramEndKeyword = false; 
+                        if (foundProgramEndKeyword) 
+                        {
+                            if (currentSymbolCode == point)
+                            {
+                                foundProgramEndKeyword = false; 
+                            }
+                            else
+                            {
+                                InputOutput.Error(2, Token); 
+                                foundProgramEndKeyword = false; 
+                            }
+                        }
+
+                        break;
                     }
                 }
             }
