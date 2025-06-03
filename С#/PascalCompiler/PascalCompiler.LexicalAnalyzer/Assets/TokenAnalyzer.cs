@@ -84,7 +84,7 @@ public class TokenAnalyzer
 
         return code switch
         {
-            >= 100 and <= 124 => "Ключевое слово",
+            >= 100 and <= 127 => "Ключевое слово",
             LexicalAnalyzer.ident => "Идентификатор",
             LexicalAnalyzer.intc => "Целая константа",
             LexicalAnalyzer.floatc => "Вещ. константа",
@@ -124,6 +124,8 @@ public class TokenAnalyzer
             { LexicalAnalyzer.minus, "Вычитание (-)" },
             { LexicalAnalyzer.assign, "Присваивание (:=)" },
             { LexicalAnalyzer.twopoints, "Диапазон (..)" },
+            { LexicalAnalyzer.lcomment, "Левый комментарий ( (* )"},
+            { LexicalAnalyzer.rcomment, "Правый комментарий ( *) )"},
             
             { LexicalAnalyzer.programsy, "program" },
             { LexicalAnalyzer.varsy, "var" },
@@ -159,7 +161,10 @@ public class TokenAnalyzer
             { LexicalAnalyzer.withsy, "with" },
             { LexicalAnalyzer.insy, "in" },
             { LexicalAnalyzer.nilsy, "nil" },
-            { LexicalAnalyzer.packedsy, "packed" }
+            { LexicalAnalyzer.packedsy, "packed" },
+            { LexicalAnalyzer.integersy, "integer" },
+            { LexicalAnalyzer.realsy, "real" },
+            { LexicalAnalyzer.charsy, "char" }
         };
     }
 

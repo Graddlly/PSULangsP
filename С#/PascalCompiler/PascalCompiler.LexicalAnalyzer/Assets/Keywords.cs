@@ -45,7 +45,9 @@ public class Keywords
             ["file"] = LexicalAnalyzer.filesy,
             ["goto"] = LexicalAnalyzer.gotosy,
             ["type"] = LexicalAnalyzer.typesy,
-            ["with"] = LexicalAnalyzer.withsy
+            ["with"] = LexicalAnalyzer.withsy,
+            ["real"] = LexicalAnalyzer.realsy,
+            ["char"] = LexicalAnalyzer.charsy
         });
         
         AddKeywordGroup(5, new Dictionary<string, byte>
@@ -68,7 +70,8 @@ public class Keywords
 
         AddKeywordGroup(7, new Dictionary<string, byte>
         {
-            ["program"] = LexicalAnalyzer.programsy
+            ["program"] = LexicalAnalyzer.programsy,
+            ["integer"] = LexicalAnalyzer.integersy
         });
 
         AddKeywordGroup(8, new Dictionary<string, byte>

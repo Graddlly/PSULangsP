@@ -71,7 +71,10 @@ public class LexicalAnalyzer
         repeatsy = 121,
         programsy = 122,
         functionsy = 123,
-        procedurensy = 124;
+        procedurensy = 124,
+        integersy = 125,
+        realsy = 126,
+        charsy = 127;
     
     private const byte ERR_NUMBER_OVERFLOW = 203;
     private const byte ERR_INVALID_CHAR = 1;
@@ -625,6 +628,8 @@ public class LexicalAnalyzer
         Console.WriteLine($"-  -> {minus}");
         Console.WriteLine($":= -> {assign}");
         Console.WriteLine($".. -> {twopoints}");
+        Console.WriteLine($"(* -> {lcomment}");
+        Console.WriteLine($"*) -> {rcomment}");
         Console.WriteLine();
         
         Console.WriteLine("Типы токенов:");
