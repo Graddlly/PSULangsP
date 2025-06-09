@@ -74,7 +74,8 @@ public class LexicalAnalyzer
         procedurensy = 124,
         integersy = 125,
         realsy = 126,
-        charsy = 127;
+        charsy = 127,
+        booleansy = 128;
     
     private const byte ERR_NUMBER_OVERFLOW = 203;
     private const byte ERR_INVALID_CHAR = 1;

@@ -166,7 +166,8 @@ public class TokenAnalyzer
             { LexicalAnalyzer.packedsy, "packed" },
             { LexicalAnalyzer.integersy, "integer" },
             { LexicalAnalyzer.realsy, "real" },
-            { LexicalAnalyzer.charsy, "char" }
+            { LexicalAnalyzer.charsy, "char" },
+            { LexicalAnalyzer.booleansy, "boolean" }
         };
     }
 

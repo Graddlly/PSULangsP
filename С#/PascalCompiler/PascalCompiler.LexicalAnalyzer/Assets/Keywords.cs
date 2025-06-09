@@ -71,7 +71,8 @@ public class Keywords
         AddKeywordGroup(7, new Dictionary<string, byte>
         {
             ["program"] = LexicalAnalyzer.programsy,
-            ["integer"] = LexicalAnalyzer.integersy
+            ["integer"] = LexicalAnalyzer.integersy,
+            ["boolean"] = LexicalAnalyzer.booleansy
         });
 
         AddKeywordGroup(8, new Dictionary<string, byte>
