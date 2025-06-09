@@ -1,3 +1,5 @@
+using PascalCompiler.IOModule.Assets;
+
 namespace PascalCompiler.LexicalAnalyzer.Assets;
 
 /// <summary>
@@ -20,7 +22,7 @@ public class TokenAnalyzer
     /// <param name="code">Код символа</param>
     /// <param name="value">Значение (для идентификаторов, констант)</param>
     /// <param name="position">Позиция в тексте</param>
-    public void AddToken(byte code, string value, IOModule.Models.TextPosition position)
+    public void AddToken(byte code, string value, TextPosition position)
     {
         _tokens.Add(new TokenInfo(code, value, position));
     }
@@ -175,9 +177,9 @@ public class TokenAnalyzer
     {
         public byte Code { get; }
         public string Value { get; }
-        public IOModule.Models.TextPosition Position { get; }
+        public TextPosition Position { get; }
 
-        public TokenInfo(byte code, string value, IOModule.Models.TextPosition position)
+        public TokenInfo(byte code, string value, TextPosition position)
         {
             Code = code;
             Value = value ?? "";

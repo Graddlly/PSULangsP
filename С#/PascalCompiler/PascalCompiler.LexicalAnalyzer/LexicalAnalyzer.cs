@@ -1,5 +1,5 @@
 using PascalCompiler.IOModule;
-using PascalCompiler.IOModule.Models;
+using PascalCompiler.IOModule.Assets;
 using PascalCompiler.LexicalAnalyzer.Assets;
 
 // ReSharper disable InconsistentNaming
@@ -81,8 +81,8 @@ public class LexicalAnalyzer
     private const byte ERR_UNCLOSED_STRING = 7;
     private const byte ERR_UNCLOSED_COMMENT = 12;
 
-    private TextPosition _token; // позиция символа
-    private readonly Keywords _keywords; // таблица ключевых слов
+    private TextPosition _token;
+    private readonly Keywords _keywords;
 
     public byte Symbol { get; private set; }
     public TextPosition Token { get; private set; }

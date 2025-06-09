@@ -1,4 +1,4 @@
-using PascalCompiler.IOModule.Models;
+using PascalCompiler.IOModule.Assets;
 
 namespace PascalCompiler.IOModule;
 
@@ -94,9 +94,7 @@ public class InputOutput
 
         if (_positionNow.charNumber == _lastInLine)
         {
-#if DEBUG
             ListThisLine();
-#endif
             
             _currentErr = _err.FindAll(e => e.errorPosition.lineNumber == _positionNow.lineNumber);
             

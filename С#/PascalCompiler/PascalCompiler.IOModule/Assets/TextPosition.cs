@@ -1,4 +1,4 @@
-namespace PascalCompiler.IOModule.Models;
+namespace PascalCompiler.IOModule.Assets;
 
 public struct TextPosition
 {
