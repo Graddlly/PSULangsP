@@ -38,7 +38,7 @@ public class SyntaxAnalyzer
     public SyntaxAnalyzer()
     {
         _lexer = new LexicalAnalyzer.LexicalAnalyzer();
-        _symbolTable = new Dictionary<string, VariableInfo>();
+        _symbolTable = new Dictionary<string, VariableInfo>(StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>
@@ -428,7 +428,7 @@ public class SyntaxAnalyzer
     /// <summary>
     /// Разбор оператора присваивания
     /// </summary>
-    private void ParseAssignmentStatement()
+    protected virtual void ParseAssignmentStatement()
     {
         var variableName = _lexer.AddrName;
 

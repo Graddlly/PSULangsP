@@ -60,8 +60,10 @@ public class SemanticAnalyzer
                 $"Несовместимые типы: нельзя присвоить {GetTypeDescription(expressionType)} переменной " + 
                 $"типа {GetTypeDescription(variableInfo.Type)}");
         }
-        
-        variableInfo.IsInitialized = true;
+
+        var updatedInfo = variableInfo;
+        updatedInfo.IsInitialized = true;
+        _symbolTable[variableName] = updatedInfo;
     }
 
     /// <summary>
@@ -153,7 +155,8 @@ public class SemanticAnalyzer
         }
 
         AddSemanticError(ERR_INCOMPATIBLE_TYPES, 
-            $"Операция деления требует числовые типы, получены: {GetTypeDescription(leftType)} и {GetTypeDescription(rightType)}");
+            $"Операция деления требует числовые типы, получены: "  + 
+            $"{GetTypeDescription(leftType)} и {GetTypeDescription(rightType)}");
         
         return VariableType.Real;
     }
@@ -169,7 +172,8 @@ public class SemanticAnalyzer
         }
 
         AddSemanticError(ERR_INCOMPATIBLE_TYPES, 
-            $"Целочисленная операция требует тип Integer, получены: {GetTypeDescription(leftType)} и {GetTypeDescription(rightType)}");
+            $"Целочисленная операция требует тип Integer, получены: " + 
+            $"{GetTypeDescription(leftType)} и {GetTypeDescription(rightType)}");
         
         return VariableType.Integer;
     }
