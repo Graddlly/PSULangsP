@@ -112,36 +112,44 @@ public class InputOutput
         if (_positionNow.charNumber == _lastInLine)
         {
             ListThisLine();
-            
+
             _currentErr = _err.FindAll(e => e.errorPosition.lineNumber == _positionNow.lineNumber);
-            
+
+#if DEBUG
+            Console.WriteLine($"[DEBUG][InputOutput.NextCh] Конец строки {_positionNow.lineNumber}. Найдено ошибок для этой строки: {_currentErr.Count}");
+            foreach(var dbgErr in _currentErr)
+            {
+                Console.WriteLine($"  - [DEBUG] Ошибка в _currentErr: Код {dbgErr.errorCode}, Поз {dbgErr.errorPosition.lineNumber}:{dbgErr.errorPosition.charNumber}");
+            }
+#endif
+
             if (_currentErr.Count > 0)
                 ListErrors();
-            
+
             ReadNextLine();
             if (!_endOfFile)
             {
                 _positionNow.lineNumber += 1;
                 _positionNow.charNumber = 0;
                 if (_line.Length > 0)
-                {
-                    _lastInLine = (byte)(_line.Length - 1);
-                    Ch = _line[0];
+                { 
+                    _lastInLine = (byte)(_line.Length - 1); 
+                    Ch = _line[0]; 
                 }
-                else
-                {
-                    Ch = '\n';
-                }
+                else 
+                { 
+                    Ch = '\n'; 
+                } 
             }
-            else
-            {
-                Ch = '\0';
-            }
+            else 
+            { 
+                Ch = '\0'; 
+            } 
         }
-        else
-        {
-            ++_positionNow.charNumber;
-            Ch = _positionNow.charNumber < _line.Length ? _line[_positionNow.charNumber] : '\n';
+        else 
+        { 
+            ++_positionNow.charNumber; 
+            Ch = _positionNow.charNumber < _line.Length ? _line[_positionNow.charNumber] : '\n'; 
         }
     }
 
@@ -185,6 +193,11 @@ public class InputOutput
         foreach (var item in _currentErr)
         {
             ++_errCount;
+            
+#if DEBUG
+            Console.WriteLine($"[DEBUG][InputOutput.ListErrors] Вывод ошибки: Код {item.errorCode}, Поз {item.errorPosition.lineNumber}:{item.errorPosition.charNumber}, Общий счетчик: {_errCount}");
+#endif
+            
             var lineNumberSpaces = new string(' ', 4);
             var errorPositionSpaces = new string(' ', item.errorPosition.charNumber);
             var message = ErrorTable.GetValueOrDefault(item.errorCode, "Неизвестная ошибка");
@@ -206,7 +219,7 @@ public class InputOutput
             _err.Add(e);
             
 #if DEBUG
-            Console.WriteLine($"[DEBUG] Добавлена ошибка {errorCode} в позицию {position} - всего ошибок: {_err.Count}");
+            Console.WriteLine($"[DEBUG][InputOutput.Error] Код: {errorCode}, Позиция: {position.lineNumber}:{position.charNumber}. Всего в _err: {_err.Count}");
 #endif
         }
     }

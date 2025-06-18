@@ -22,7 +22,7 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
         try
         {
             base.AnalyzeProgram();
-            
+#if DEBUG
             Console.WriteLine("\n=== СЕМАНТИЧЕСКИЙ АНАЛИЗ ===");
             _semanticAnalyzer.PrintSemanticReport();
             _semanticAnalyzer.AnalyzeVariableUsage();
@@ -30,6 +30,7 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
             Console.WriteLine(!_semanticAnalyzer.HasSemanticErrors()
                 ? "=== АНАЛИЗ ЗАВЕРШЕН УСПЕШНО ==="
                 : "=== АНАЛИЗ ЗАВЕРШЕН С СЕМАНТИЧЕСКИМИ ОШИБКАМИ ===");
+#endif
         }
         catch (SyntaxException ex)
         {
