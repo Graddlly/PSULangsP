@@ -43,7 +43,7 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
     /// <summary>
     /// Переопределенный разбор оператора присваивания с семантической проверкой
     /// </summary>
-    protected new void ParseAssignmentStatement()
+    protected override void ParseAssignmentStatement()
     {
         var variableName = _lexer.AddrName;
 
@@ -152,6 +152,11 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
             case LexicalAnalyzer.LexicalAnalyzer.charc:
                 NextSymbol();
                 return VariableType.Char;
+            
+            case LexicalAnalyzer.LexicalAnalyzer.truesy:
+            case LexicalAnalyzer.LexicalAnalyzer.falsesy:
+                NextSymbol();
+                return VariableType.Boolean;
 
             case LexicalAnalyzer.LexicalAnalyzer.ident:
             {

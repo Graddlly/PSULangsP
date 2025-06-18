@@ -47,7 +47,8 @@ public class Keywords
             ["type"] = LexicalAnalyzer.typesy,
             ["with"] = LexicalAnalyzer.withsy,
             ["real"] = LexicalAnalyzer.realsy,
-            ["char"] = LexicalAnalyzer.charsy
+            ["char"] = LexicalAnalyzer.charsy,
+            ["true"] = LexicalAnalyzer.truesy
         });
         
         AddKeywordGroup(5, new Dictionary<string, byte>
@@ -57,7 +58,8 @@ public class Keywords
             ["array"] = LexicalAnalyzer.arraysy,
             ["const"] = LexicalAnalyzer.constsy,
             ["label"] = LexicalAnalyzer.labelsy,
-            ["until"] = LexicalAnalyzer.untilsy
+            ["until"] = LexicalAnalyzer.untilsy,
+            ["false"] = LexicalAnalyzer.falsesy
         });
 
         AddKeywordGroup(6, new Dictionary<string, byte>
