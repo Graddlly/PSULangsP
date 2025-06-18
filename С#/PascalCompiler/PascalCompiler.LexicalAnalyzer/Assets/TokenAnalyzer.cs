@@ -170,21 +170,4 @@ public class TokenAnalyzer
             { LexicalAnalyzer.booleansy, "boolean" }
         };
     }
-
-    /// <summary>
-    /// Структура для хранения информации о токене
-    /// </summary>
-    private struct TokenInfo
-    {
-        public byte Code { get; }
-        public string Value { get; }
-        public TextPosition Position { get; }
-
-        public TokenInfo(byte code, string value, TextPosition position)
-        {
-            Code = code;
-            Value = value ?? "";
-            Position = position;
-        }
-    }
 }
