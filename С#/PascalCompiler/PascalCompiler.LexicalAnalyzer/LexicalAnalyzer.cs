@@ -428,7 +428,6 @@ public class LexicalAnalyzer
     /// </summary>
     private void ScanPointOperator()
     {
-        InputOutput.NextCh();
         if (InputOutput.Ch == '.')
         {
             Symbol = twopoints;
