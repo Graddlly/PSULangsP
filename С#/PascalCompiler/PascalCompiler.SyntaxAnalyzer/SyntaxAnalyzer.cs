@@ -14,26 +14,26 @@ namespace PascalCompiler.SyntaxAnalyzer;
 /// </summary>
 public class SyntaxAnalyzer
 {
-    private readonly LexicalAnalyzer.LexicalAnalyzer _lexer;
-    private byte _currentSymbol;
-    private readonly Dictionary<string, VariableInfo> _symbolTable;
+    protected readonly LexicalAnalyzer.LexicalAnalyzer _lexer;
+    protected byte _currentSymbol;
+    protected readonly Dictionary<string, VariableInfo> _symbolTable;
     
     private const byte ERR_EXPECTED_SEMICOLON = 2;
-    private const byte ERR_EXPECTED_IDENTIFIER = 3;
+    protected const byte ERR_EXPECTED_IDENTIFIER = 3;
     private const byte ERR_EXPECTED_EQUALS = 4;
     private const byte ERR_EXPECTED_BEGIN = 10;
     private const byte ERR_EXPECTED_END = 11;
     private const byte ERR_INVALID_TYPE = 13;
     private const byte ERR_DUPLICATE_IDENTIFIER = 14;
-    private const byte ERR_UNDECLARED_IDENTIFIER = 15;
+    protected const byte ERR_UNDECLARED_IDENTIFIER = 15;
     private const byte ERR_EXPECTED_COLON = 16;
     private const byte ERR_EXPECTED_OF = 17;
     private const byte ERR_EXPECTED_ARRAY = 18;
     private const byte ERR_EXPECTED_LBRACKET = 19;
-    private const byte ERR_EXPECTED_RBRACKET = 20;
-    private const byte ERR_EXPECTED_ASSIGN = 21;
+    protected const byte ERR_EXPECTED_RBRACKET = 20;
+    protected const byte ERR_EXPECTED_ASSIGN = 21;
     private const byte ERR_EXPECTED_DOT = 22;
-    private const byte ERR_INVALID_ARRAY_INDEX = 23;
+    protected const byte ERR_INVALID_ARRAY_INDEX = 23;
 
     public SyntaxAnalyzer()
     {
@@ -549,7 +549,7 @@ public class SyntaxAnalyzer
     /// <summary>
     /// Переход к следующему символу
     /// </summary>
-    private void NextSymbol()
+    protected void NextSymbol()
     {
         _currentSymbol = _lexer.NextSym();
     }
@@ -557,7 +557,7 @@ public class SyntaxAnalyzer
     /// <summary>
     /// Обработка синтаксической ошибки
     /// </summary>
-    private void SyntaxError(byte errorCode, string message)
+    protected void SyntaxError(byte errorCode, string message)
     {
         InputOutput.Error(errorCode);
 #if DEBUG
