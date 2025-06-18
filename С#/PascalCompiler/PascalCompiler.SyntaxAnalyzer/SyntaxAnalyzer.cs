@@ -38,7 +38,7 @@ public class SyntaxAnalyzer
     public SyntaxAnalyzer()
     {
         _lexer = new LexicalAnalyzer.LexicalAnalyzer();
-        _symbolTable = new Dictionary<string, VariableInfo>();
+        _symbolTable = new Dictionary<string, VariableInfo>(StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>
@@ -51,7 +51,9 @@ public class SyntaxAnalyzer
         try
         {
             ParseProgram();
+#if DEBUG
             Console.WriteLine("\n=== СИНТАКСИЧЕСКИЙ АНАЛИЗ ЗАВЕРШЕН УСПЕШНО ===");
+#endif
         }
         catch (SyntaxException ex)
         {
@@ -323,20 +325,40 @@ public class SyntaxAnalyzer
     {
         if (_currentSymbol is LexicalAnalyzer.LexicalAnalyzer.intc or LexicalAnalyzer.LexicalAnalyzer.ident)
         {
+#if DEBUG
+            Console.WriteLine($"[DEBUG][ParseArrayRange] Начало. Кандидат на нижнюю границу: {_currentSymbol}");
+#endif
+            
             NextSymbol();
 
             if (_currentSymbol == LexicalAnalyzer.LexicalAnalyzer.twopoints)
             {
+#if DEBUG
+                Console.WriteLine($"[DEBUG][ParseArrayRange] Найдено '..'. Текущий символ: {_currentSymbol}");
+#endif
                 NextSymbol();
 
                 if (_currentSymbol is LexicalAnalyzer.LexicalAnalyzer.intc or LexicalAnalyzer.LexicalAnalyzer.ident)
                 {
+#if DEBUG
+                    Console.WriteLine($"[DEBUG][ParseArrayRange] Кандидат на верхнюю границу: {_currentSymbol}");
+#endif
                     NextSymbol();
+                    
+#if DEBUG
+                    Console.WriteLine($"[DEBUG][ParseArrayRange] После использования верхней границы. _currentSymbol ДОЛЖЕН БЫТЬ ']': {_currentSymbol}");
+#endif
                 }
                 else
                 {
                     SyntaxError(ERR_EXPECTED_IDENTIFIER, "Ожидается верхняя граница диапазона");
                 }
+            }
+            else
+            {
+#if DEBUG
+                Console.WriteLine($"[DEBUG][ParseArrayRange] Ожидалось '..' (две точки, код 74), а получилось: {_currentSymbol}. Lexer.AddrName: '{_lexer.AddrName}'");
+#endif
             }
         }
         else
@@ -406,7 +428,7 @@ public class SyntaxAnalyzer
     /// <summary>
     /// Разбор оператора присваивания
     /// </summary>
-    private void ParseAssignmentStatement()
+    protected virtual void ParseAssignmentStatement()
     {
         var variableName = _lexer.AddrName;
 

@@ -22,7 +22,7 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
         try
         {
             base.AnalyzeProgram();
-            
+#if DEBUG
             Console.WriteLine("\n=== СЕМАНТИЧЕСКИЙ АНАЛИЗ ===");
             _semanticAnalyzer.PrintSemanticReport();
             _semanticAnalyzer.AnalyzeVariableUsage();
@@ -30,6 +30,7 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
             Console.WriteLine(!_semanticAnalyzer.HasSemanticErrors()
                 ? "=== АНАЛИЗ ЗАВЕРШЕН УСПЕШНО ==="
                 : "=== АНАЛИЗ ЗАВЕРШЕН С СЕМАНТИЧЕСКИМИ ОШИБКАМИ ===");
+#endif
         }
         catch (SyntaxException ex)
         {
@@ -42,7 +43,7 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
     /// <summary>
     /// Переопределенный разбор оператора присваивания с семантической проверкой
     /// </summary>
-    protected new void ParseAssignmentStatement()
+    protected override void ParseAssignmentStatement()
     {
         var variableName = _lexer.AddrName;
 
@@ -151,6 +152,11 @@ public class EnhancedSyntaxAnalyzer : SyntaxAnalyzer.SyntaxAnalyzer
             case LexicalAnalyzer.LexicalAnalyzer.charc:
                 NextSymbol();
                 return VariableType.Char;
+            
+            case LexicalAnalyzer.LexicalAnalyzer.truesy:
+            case LexicalAnalyzer.LexicalAnalyzer.falsesy:
+                NextSymbol();
+                return VariableType.Boolean;
 
             case LexicalAnalyzer.LexicalAnalyzer.ident:
             {

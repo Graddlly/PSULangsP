@@ -75,7 +75,9 @@ public class LexicalAnalyzer
         integersy = 125,
         realsy = 126,
         charsy = 127,
-        booleansy = 128;
+        booleansy = 128,
+        truesy = 129,
+        falsesy = 130;
     
     private const byte ERR_NUMBER_OVERFLOW = 203;
     private const byte ERR_INVALID_CHAR = 1;
@@ -428,7 +430,6 @@ public class LexicalAnalyzer
     /// </summary>
     private void ScanPointOperator()
     {
-        InputOutput.NextCh();
         if (InputOutput.Ch == '.')
         {
             Symbol = twopoints;

@@ -79,7 +79,9 @@ public class Program
     /// </summary>
     private static void RunLexicalAnalysis()
     {
+#if DEBUG
         Console.WriteLine("=== ЛЕКСИЧЕСКИЙ АНАЛИЗ ===");
+#endif
         
         var lexer = new LexicalAnalyzer.LexicalAnalyzer();
         var tokenAnalyzer = new TokenAnalyzer();
@@ -96,7 +98,9 @@ public class Program
     /// </summary>
     private static void RunSyntaxAnalysis()
     {
+#if DEBUG
         Console.WriteLine("=== СИНТАКСИЧЕСКИЙ АНАЛИЗ ===");
+#endif
         
         var syntaxAnalyzer = new SyntaxAnalyzer.SyntaxAnalyzer();
         syntaxAnalyzer.AnalyzeProgram();
