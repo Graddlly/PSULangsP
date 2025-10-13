@@ -149,7 +149,7 @@ void Task2::run() {
     WaitForMultipleObjects(n, fillThreads, TRUE, INFINITE);
     WaitForMultipleObjects(n, sumThreads, TRUE, INFINITE);
 
-    // printMatrix();
+    printMatrix();
 
     cout << "\n=== Общая сумма элементов матрицы: " << fixed
               << setprecision(2) << totalSum << " ===" << endl;
